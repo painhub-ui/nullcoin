@@ -23,13 +23,14 @@ def main() -> None:
         _cmd_mine(args[1:])
     elif command == "send":
         _cmd_send(args[1:])
+    elif command == "explorer":
+        _cmd_explorer(args[1:])
     elif command == "version":
         _cmd_version()
     else:
         print(f"Unknown command: {command}")
         _print_help()
-
-
+        print("  nullcoin explorer [--port N]     Launch block explorer")
 def _cmd_wallet(sub: str, args: list[str]) -> None:
     if sub == "create":
         _wallet_create(args)
@@ -325,6 +326,20 @@ def _cmd_send(args: list[str]) -> None:
     print()
     print("Run 'nullcoin mine' to confirm.")
 
+def _cmd_explorer(args: list[str]) -> None:
+    from ..explorer import run_explorer
+
+    port = 8080
+    for i, a in enumerate(args):
+        if a == "--port" and i + 1 < len(args):
+            port = int(args[i + 1])
+
+    chain_path = ".nullcoin/chain.json"
+    if not os.path.exists(chain_path):
+        print("No blockchain found. Run: nullcoin chain init")
+        return
+
+    run_explorer(port=port, chain_path=chain_path)
 
 def _cmd_version() -> None:
     from ..chain.constants import COIN_NAME, TICKER, VERSION
