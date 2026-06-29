@@ -1,0 +1,18 @@
+from __future__ import annotations
+
+COIN_NAME = "NullCoin"
+TICKER = "NLC"
+VERSION = (0, 1, 0)
+
+TOTAL_SUPPLY = 18_000_000
+BLOCK_TIME_SECONDS = 60
+INITIAL_REWARD = 6.0
+HALVING_INTERVAL = 210_000
+TAIL_EMISSION = 0.1
+
+GENESIS_MESSAGE = (
+    "NullCoin — Privacy is not a feature. It is the foundation."
+)
+
+DIFFICULTY_INITIAL = 4
+DIFFICULTY_ADJUSTMENT_INTERVAL = 2016

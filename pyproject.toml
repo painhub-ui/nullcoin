@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nullcoin"
+version = "0.1.0"
+description = "NullCoin (NLC) — Privacy-first blockchain with verifiable supply."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [
+    { name = "painhub-ui" }
+]
+keywords = [
+    "blockchain",
+    "cryptocurrency",
+    "privacy",
+    "zero-knowledge",
+    "decentralized",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nullcoin"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[project.scripts]
+nullcoin = "nullcoin.cli.main:main"
