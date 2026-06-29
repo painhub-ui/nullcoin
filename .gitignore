@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.nullcoin/
+dist/
+build/
+*.egg-info/
+nullcoin_chain.json
+codeflow_report_*.html
+.codeflow/
