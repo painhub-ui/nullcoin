@@ -109,6 +109,52 @@ class Wallet:
         print(f"Wallet saved: {path}")
         print("KEEP YOUR PRIVATE KEY SAFE — NEVER SHARE IT")
 
+    def save_encrypted(self, path: str, password: str) -> None:
+        import hashlib
+        import base64
+
+        key = hashlib.sha256(password.encode()).digest()
+        private_hex = self._private_key.to_hex()
+
+        encrypted = []
+        key_bytes = key
+        for i, c in enumerate(private_hex.encode()):
+            encrypted.append(c ^ key_bytes[i % len(key_bytes)])
+
+        data = {
+            "address": self._address,
+            "public_key": self._public_key.to_hex(),
+            "encrypted_key": base64.b64encode(
+                bytes(encrypted)
+            ).decode(),
+            "encrypted": True,
+        }
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w") as f:
+            json.dump(data, f, indent=2)
+        print(f"Encrypted wallet saved: {path}")
+
+    @classmethod
+    def load_encrypted(cls, path: str, password: str) -> Wallet:
+        import hashlib
+        import base64
+
+        with open(path) as f:
+            data = json.load(f)
+
+        if not data.get("encrypted"):
+            return cls.from_private_key(data["private_key"])
+
+        key = hashlib.sha256(password.encode()).digest()
+        encrypted = base64.b64decode(data["encrypted_key"])
+
+        decrypted = []
+        for i, c in enumerate(encrypted):
+            decrypted.append(c ^ key[i % len(key)])
+
+        private_hex = bytes(decrypted).decode()
+        return cls.from_private_key(private_hex)
+
     @classmethod
     def load(cls, path: str) -> Wallet:
         with open(path) as f:

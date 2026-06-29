@@ -105,6 +105,16 @@ class Blockchain:
 
         return True
 
+    def _verify_transaction(self, tx: Transaction) -> bool:
+        if tx.memo == "coinbase" or tx.inputs[0].tx_id == "0" * 64:
+            return True
+
+        for inp in tx.inputs:
+            if not inp.signature:
+                return False
+
+        return True
+
     def _is_valid_block(self, block: Block) -> bool:
         if not self._chain:
             return True
@@ -119,6 +129,10 @@ class Blockchain:
 
         if not block.is_valid_proof():
             return False
+
+        for tx in block.transactions:
+            if not self._verify_transaction(tx):
+                return False
 
         return True
 
